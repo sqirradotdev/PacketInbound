@@ -1,0 +1,54 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Control",
+"class": "Stage",
+"language": "GDScript",
+"path": "res://Scripts/Game/Stage.gd"
+} ]
+_global_script_class_icons={
+"Stage": ""
+}
+
+[application]
+
+config/name="Arkav Packet Sortet"
+run/main_scene="res://Scripts/Game/Stage.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://Scripts/Global.gd"
+
+[display]
+
+window/size/width=720
+window/size/height=1280
+window/size/test_width=540
+window/size/test_height=960
+window/handheld/orientation="portrait"
+window/stretch/mode="2d"
+window/stretch/aspect="keep_width"
+
+[input]
+
+ui_touch={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+environment/default_environment="res://default_env.tres"
