@@ -27,6 +27,10 @@ var good_chance: int = 80
 
 
 func _ready() -> void:
+	modulate.a = 0
+	tween.interpolate_property(self, "modulate:a", 0, 1, 0.5)
+	tween.start()
+	
 	call_deferred("_randomize")
 	
 	if get_tree().current_scene is Stage:
@@ -37,11 +41,11 @@ func _process(delta: float) -> void:
 #	if Input.is_action_just_pressed("ui_accept"):
 #		call_deferred("_randomize")
 	
-	if position.y < -90:
+	if position.y < 157:
 		if type == PACKET_GOOD:
 			emit_signal("passed", points / 5)
 		else:
-			emit_signal("passed", -(points / 2.5))
+			emit_signal("passed", -(points / 1.5))
 		queue_free()
 
 
@@ -64,7 +68,7 @@ func _randomize() -> void:
 	shape.shape.extents = Vector2(s/2, s/2)
 	particle.emission_rect_extents = Vector2(s/2, s/2)
 	
-	var s_p: float = 1 + ((s - 84)) / (160 - 84)
+	var s_p: float = 1 + (s - 84) / (160 - 84)
 	point_disp.rect_scale = Vector2(s_p ,s_p)
 	
 	points = stepify(64 * (s / 200), 2)
@@ -76,10 +80,10 @@ func _randomize() -> void:
 	# Temporary, will supply sprites later
 	if type == PACKET_GOOD:
 		sprite_glow.modulate = Color.green
-		particle.modulate = Color.green
+		particle.modulate = Color.green * 2
 	else:
 		sprite_glow.modulate = Color.red
-		particle.modulate = Color.red
+		particle.modulate = Color.red * 2
 	
 	point_disp.text = str(points)
 

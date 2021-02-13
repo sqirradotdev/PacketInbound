@@ -2,10 +2,13 @@ extends Control
 class_name Stage
 
 onready var spawner = $Spawner
+onready var gauge_display = $GaugeDisplay
 onready var stream_area = $StreamArea
+onready var glitch_filter = $GlitchFilter
+onready var tween = $Tween
 
-var good_chance: int = 80
-var good_chance_min: int = 40
+var good_chance: int = 60
+var good_chance_min: int = 38
 var speed: float = 250
 var gauge_deductor: float = 4
 
@@ -24,15 +27,6 @@ func _ready() -> void:
 	stream_width_start_end = Vector2(stream_area.rect_position.x, stream_area.rect_position.x + stream_area.rect_size.x)
 	
 	time_start = OS.get_unix_time()
-	
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
-	
-	var lol = get_viewport().get_texture().get_data()
-	lol.flip_y()
-	lol.save_png("user://lol.png")
 
 
 func _process(delta: float) -> void:
@@ -57,8 +51,24 @@ func _process(delta: float) -> void:
 		good_chance = clamp(good_chance, good_chance_min, 100)
 		prev_elapsed = elapsed
 	
+	gauge_display.modulate.r = (1 - (gauge / 100)) * 10
+	gauge_display.modulate.g = 1.0 - clamp(1 - (gauge - 0) / (50 - 0), 0, 1)
+	
 	$Label.text = "Gauge: " + str(gauge) + "\nTime: " + elapsed_str + "\nChance: " + str(100 - good_chance) + "%\nSpeed: " + str(speed)
+	
+	gauge_display.text = str(ceil(gauge))
 
 
 func _on_packet_passed(point: int) -> void:
 	gauge += point
+	
+	# If negative (bad packet)
+	if point < 0:
+		glitch_filter.show()
+		tween.interpolate_method(self, "_set_glitch_amount", 0.2, 0, 0.7)
+		tween.interpolate_property(glitch_filter, "visible", true, false, 0.7)
+		tween.start()
+
+
+func _set_glitch_amount(amount: float) -> void:
+	glitch_filter.material.set_shader_param("AMT", amount)

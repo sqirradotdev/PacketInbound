@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Packet_base.png-2268c36954e6b957363058fadd6ae312.stex"
+path="res://.import/Packet_glow.png-50ae693f6b7db65b6abb370b017c1154.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Textures/Packet_base.png"
-dest_files=[ "res://.import/Packet_base.png-2268c36954e6b957363058fadd6ae312.stex" ]
+source_file="res://Resources/Textures/Packet/Packet_glow.png"
+dest_files=[ "res://.import/Packet_glow.png-50ae693f6b7db65b6abb370b017c1154.stex" ]
 
 [params]
 

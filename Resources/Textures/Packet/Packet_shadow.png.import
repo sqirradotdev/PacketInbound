@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Packet_shadow.png-27075b408631a410eb8f3ca5ee054edb.stex"
+path="res://.import/Packet_shadow.png-519055d24fe1b1519c6deff0c4f2e03f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Textures/Packet_shadow.png"
-dest_files=[ "res://.import/Packet_shadow.png-27075b408631a410eb8f3ca5ee054edb.stex" ]
+source_file="res://Resources/Textures/Packet/Packet_shadow.png"
+dest_files=[ "res://.import/Packet_shadow.png-519055d24fe1b1519c6deff0c4f2e03f.stex" ]
 
 [params]
 
