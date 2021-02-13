@@ -28,4 +28,4 @@ func _process(delta: float) -> void:
 		
 		if get_parent() is Stage:
 			instance.connect("passed", get_parent(), "_on_packet_passed")
-			#instance.connect("destroyed", get_parent(), "_on_packet_destroyed")
+			get_parent().connect("destroy_all_packets", instance, "destroy")

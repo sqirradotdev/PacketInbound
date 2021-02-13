@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Resources/Textures/Packet/Packet_base.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Packet/Packet.gd" type="Script" id=2]
@@ -6,6 +6,11 @@
 [ext_resource path="res://Resources/Textures/Packet/Packet_shadow.png" type="Texture" id=4]
 [ext_resource path="res://Resources/Fonts/m5x7.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Resources/Textures/Packet/Packet_glow2.png" type="Texture" id=6]
+[ext_resource path="res://Resources/Audio/SFX/packet_destroy.wav" type="AudioStream" id=7]
+
+[sub_resource type="AudioStreamRandomPitch" id=7]
+audio_stream = ExtResource( 7 )
+random_pitch = 1.25
 
 [sub_resource type="DynamicFont" id=1]
 size = 40
@@ -45,6 +50,10 @@ input_pickable = true
 script = ExtResource( 2 )
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="DestroySound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 7 )
+bus = "SFX"
 
 [node name="Sprite" type="NinePatchRect" parent="."]
 anchor_left = 0.5
@@ -143,6 +152,7 @@ __meta__ = {
 [node name="Glow2" type="Sprite" parent="."]
 modulate = Color( 0, 0.2, 0, 1 )
 material = SubResource( 6 )
+position = Vector2( 1, -1 )
 scale = Vector2( 1.125, 1.125 )
 texture = ExtResource( 6 )
 

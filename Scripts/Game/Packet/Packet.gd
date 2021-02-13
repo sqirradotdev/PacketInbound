@@ -1,6 +1,5 @@
 extends KinematicBody2D
 signal passed
-signal destroyed
 
 onready var shape = $Shape
 onready var sprite = $Sprite
@@ -8,6 +7,7 @@ onready var sprite_glow = $Sprite/Glow
 onready var sprite_glow2 = $Glow2
 onready var point_disp = $PointDisp
 onready var particle = $ExplosionParticle
+onready var destroy_sound = $DestroySound
 onready var tween = $Tween
 
 enum {
@@ -54,7 +54,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_grabbing and not dieded:
 		if get_tree().current_scene is Stage:
-			position.y -= get_tree().current_scene.speed * delta
+			position.y -= get_tree().current_scene.speed_multiplied * delta
 		else:
 			position.y -= 100 * delta
 
@@ -99,23 +99,28 @@ func _check_if_outside() -> void:
 	if get_tree().current_scene is Stage:
 		var start_end: Vector2 = get_tree().current_scene.stream_width_start_end
 		if position.x < start_end.x or position.x > start_end.y:
-			dieded = true
-			
-			emit_signal("destroyed")
-			
-			sprite.hide()
-			point_disp.hide()
-			particle.show()
-			particle.emitting = true
-			
-			sprite_glow2.scale = sprite_glow2.scale * 2
-			tween.interpolate_property(sprite_glow2, "modulate:v", 1.5, 0, 0.5)
-			tween.start()
-			
-			yield(get_tree().create_timer(particle.lifetime), "timeout")
-			
-			queue_free()
+			var f = destroy()
+			if f is GDScriptFunctionState:
+				yield(f, "completed")
 
+
+func destroy() -> void:
+	dieded = true
+	
+	destroy_sound.play()
+	
+	sprite.hide()
+	point_disp.hide()
+	particle.show()
+	particle.emitting = true
+	
+	sprite_glow2.scale = sprite_glow2.scale * 2
+	tween.interpolate_property(sprite_glow2, "modulate:v", 1.5, 0, 0.5)
+	tween.start()
+	
+	yield(get_tree().create_timer(particle.lifetime), "timeout")
+	
+	queue_free()
 
 
 func _on_Packet_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:

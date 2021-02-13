@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/packet_destroy.wav-ea502a4920f2ead8b6668e3bd9e2cb29.sample"
+
+[deps]
+
+source_file="res://Resources/Audio/SFX/packet_destroy.wav"
+dest_files=[ "res://.import/packet_destroy.wav-ea502a4920f2ead8b6668e3bd9e2cb29.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
