@@ -3,7 +3,7 @@ extends Node2D
 var packet_scene = preload("res://Scripts/Game/Packet/Packet.tscn")
 
 var active: bool = false
-var y_trigger: float = 5
+var y_trigger: float = 0
 
 var last_instance: KinematicBody2D
 

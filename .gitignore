@@ -10,5 +10,6 @@ export_presets.cfg
 .mono/
 data_*/
 
-# Game specific
+# Project ignores
 export/
+*.*~

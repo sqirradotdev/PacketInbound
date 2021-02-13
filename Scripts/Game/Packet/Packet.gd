@@ -1,5 +1,10 @@
 extends KinematicBody2D
 
+onready var shape = $Shape
+onready var sprite = $Sprite
+onready var sprite_glow = $Sprite/Glow
+onready var tween = $Tween
+
 enum {
 	PACKET_GOOD,
 	PACKET_BAD
@@ -9,12 +14,10 @@ var type: int
 
 var points: int = 0
 
-var rng_scale: RandomNumberGenerator = RandomNumberGenerator.new()
+var rng_size: RandomNumberGenerator = RandomNumberGenerator.new()
 var rng_types: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var dieded: bool = false # Hi it's me le epic 9gag army
-var is_hovering: bool = false
-var is_pressed: bool = false
 var is_grabbing: bool = false
 
 var good_chance: int = 80
@@ -28,6 +31,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("ui_accept"):
+		call_deferred("_randomize")
+	
 	if position.y < -90:
 		if get_tree().current_scene is Stage:
 			if type == PACKET_GOOD:
@@ -46,14 +52,16 @@ func _physics_process(delta: float) -> void:
 
 
 func _randomize() -> void:
-	rng_scale.randomize()
+	rng_size.randomize()
 	rng_types.randomize()
 	
-	# Randomize scale
-	var f: float = stepify(rng_scale.randf_range(0.3, 1.0), 0.05)
-	scale = Vector2(f, f)
+	# Randomize size
+	var s: float = rng_size.randi_range(84, 150)
+	sprite.rect_size = Vector2(s, s)
+	sprite.rect_position = Vector2(-s/2, -s/2)
+	shape.shape.extents = Vector2(s/2, s/2)
 	
-	points = 16 * f
+	points = 16 * (s / 200)
 	
 	print("points:" + str(points))
 	
@@ -63,9 +71,9 @@ func _randomize() -> void:
 	
 	# Temporary, will supply sprites later
 	if type == PACKET_GOOD:
-		modulate = Color.white
+		sprite_glow.modulate = Color.green
 	else:
-		modulate = Color.red
+		sprite_glow.modulate = Color.red
 	
 	print("percent: " + str(t_percent))
 	print("actual: " + str(type))
@@ -87,29 +95,17 @@ func _check_if_outside() -> void:
 			queue_free()
 
 
+
+func _on_Packet_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+	if event.is_action_pressed("ui_touch") and not dieded:
+		is_grabbing = true
+
+
 func _input(event: InputEvent) -> void:
-	if not dieded:
-		if event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT:
-				if event.pressed and is_hovering:
-					is_grabbing = true
-				else:
-					is_grabbing = false
-					call_deferred("_check_if_outside")
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		if is_grabbing:
-			var rel: Vector2 = event.relative
-			position += rel
-
-
-func _on_Packet_mouse_entered() -> void:
-	is_hovering = true
-	pass
-
-
-func _on_Packet_mouse_exited() -> void:
-	is_hovering = false
-	pass
+	if is_grabbing:
+		if event.is_action_released("ui_touch"):
+			is_grabbing = false
+			call_deferred("_check_if_outside")
+		
+		if is_grabbing and event is InputEventMouseMotion:
+			position += event.relative
