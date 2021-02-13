@@ -95,6 +95,8 @@ func _game_over() -> void:
 	emit_signal("destroy_all_packets")
 	game_over_audio.play()
 	
+	tween.stop_all()
+	
 	color_flash.color.r = 1
 	color_flash.color.v = 0.001
 	tween.interpolate_property(color_flash, "color:v", 0.4, 0, 1)
@@ -106,7 +108,7 @@ func _game_over() -> void:
 	glitch_filter.show()
 	_set_glitch_amount(1)
 	
-	yield(tween, "tween_all_completed")
+	yield(get_tree().create_timer(1), "timeout")
 	
 	get_tree().call_group("Game", "queue_free")
 	game_over_screen.go()
@@ -116,14 +118,12 @@ func _game_over() -> void:
 	tween.start()
 	
 	yield(tween2, "tween_all_completed")
-	
 	music.stop()
 
 
 func _on_packet_passed(point: int) -> void:
 	gauge += point
 	
-	# If negative (bad packet)
 	if gauge > 0:
 		if point < 0:
 			glitch_filter.show()

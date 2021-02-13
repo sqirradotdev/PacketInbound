@@ -17,34 +17,34 @@ colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.858065, 1, 1, 1, 0 )
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=3]
 size = 48
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 224
 font_data = ExtResource( 4 )
 
-[sub_resource type="CanvasItemMaterial" id=8]
+[sub_resource type="CanvasItemMaterial" id=5]
 blend_mode = 1
 
-[sub_resource type="CanvasItemMaterial" id=7]
+[sub_resource type="CanvasItemMaterial" id=6]
 blend_mode = 1
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=7]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=8]
 size = 64
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=9]
 size = 192
 font_data = ExtResource( 4 )
 
-[sub_resource type="Shader" id=5]
+[sub_resource type="Shader" id=10]
 code = "shader_type canvas_item;
 render_mode unshaded;
 
@@ -100,8 +100,8 @@ void fragment()
 }
 "
 
-[sub_resource type="ShaderMaterial" id=6]
-shader = SubResource( 5 )
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 10 )
 shader_param/amount = 0.2
 shader_param/speed = 0.6
 
@@ -198,7 +198,7 @@ __meta__ = {
 anchor_right = 1.0
 margin_top = 38.0
 margin_bottom = 76.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 3 )
 text = "CONNECTION HEALTH"
 align = 1
 __meta__ = {
@@ -211,7 +211,7 @@ __meta__ = {
 anchor_right = 1.0
 margin_top = 239.0
 margin_bottom = 277.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 3 )
 text = "UPTIME: 00:00"
 align = 1
 __meta__ = {
@@ -227,7 +227,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -581.0
 margin_bottom = -403.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "100"
 align = 1
 valign = 1
@@ -237,14 +237,14 @@ __meta__ = {
 
 [node name="Glow" type="Sprite" parent="GaugeDisplay"]
 self_modulate = Color( 1, 1, 1, 0.376471 )
-material = SubResource( 8 )
+material = SubResource( 5 )
 position = Vector2( 303, 105 )
 scale = Vector2( 1.67969, 1.17188 )
 texture = ExtResource( 6 )
 
 [node name="Glow2" type="Sprite" parent="GaugeDisplay"]
 self_modulate = Color( 1, 1, 1, 0.376471 )
-material = SubResource( 8 )
+material = SubResource( 5 )
 position = Vector2( 409, 105 )
 scale = Vector2( 1.67969, 1.17188 )
 texture = ExtResource( 6 )
@@ -264,7 +264,7 @@ __meta__ = {
 [node name="ColorFlash" type="ColorRect" parent="." groups=[
 "Game",
 ]]
-material = SubResource( 7 )
+material = SubResource( 6 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -838.0
@@ -282,7 +282,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = 389.0
 margin_bottom = 534.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 7 )
 text = "Gauge:
 Time:
 Chance:
@@ -316,7 +316,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -25.5
 margin_bottom = 25.5
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 8 )
 text = "Disconnected..."
 align = 1
 __meta__ = {
@@ -329,7 +329,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -104.0
 margin_bottom = -53.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 8 )
 text = "TOTAL UPTIME:"
 align = 1
 __meta__ = {
@@ -342,7 +342,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -76.0
 margin_bottom = 76.0
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 9 )
 text = "00:00"
 align = 1
 __meta__ = {
@@ -351,7 +351,7 @@ __meta__ = {
 
 [node name="GlitchFilter" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 6 )
+material = SubResource( 11 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -838.0
