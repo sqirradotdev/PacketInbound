@@ -1,8 +1,11 @@
 extends KinematicBody2D
+signal passed
 
 onready var shape = $Shape
 onready var sprite = $Sprite
 onready var sprite_glow = $Sprite/Glow
+onready var point_disp = $PointDisp
+onready var particle = $ExplosionParticle
 onready var tween = $Tween
 
 enum {
@@ -31,15 +34,14 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("ui_accept"):
-		call_deferred("_randomize")
+#	if Input.is_action_just_pressed("ui_accept"):
+#		call_deferred("_randomize")
 	
 	if position.y < -90:
-		if get_tree().current_scene is Stage:
-			if type == PACKET_GOOD:
-				get_tree().current_scene.gauge += points
-			else:
-				get_tree().current_scene.gauge -= points
+		if type == PACKET_GOOD:
+			emit_signal("passed", points / 5)
+		else:
+			emit_signal("passed", -(points / 2.5))
 		queue_free()
 
 
@@ -48,7 +50,7 @@ func _physics_process(delta: float) -> void:
 		if get_tree().current_scene is Stage:
 			position.y -= get_tree().current_scene.speed * delta
 		else:
-			position.y -= 250 * delta
+			position.y -= 100 * delta
 
 
 func _randomize() -> void:
@@ -56,14 +58,16 @@ func _randomize() -> void:
 	rng_types.randomize()
 	
 	# Randomize size
-	var s: float = rng_size.randi_range(84, 150)
+	var s: float = rng_size.randi_range(84, 160)
 	sprite.rect_size = Vector2(s, s)
 	sprite.rect_position = Vector2(-s/2, -s/2)
 	shape.shape.extents = Vector2(s/2, s/2)
+	particle.emission_rect_extents = Vector2(s/2, s/2)
 	
-	points = 16 * (s / 200)
+	var s_p: float = 1 + ((s - 84)) / (160 - 84)
+	point_disp.rect_scale = Vector2(s_p ,s_p)
 	
-	print("points:" + str(points))
+	points = stepify(64 * (s / 200), 2)
 	
 	# Randomize types (good packet or bad packet)
 	var t_percent: int = rng_types.randi_range(1, 100)
@@ -72,12 +76,12 @@ func _randomize() -> void:
 	# Temporary, will supply sprites later
 	if type == PACKET_GOOD:
 		sprite_glow.modulate = Color.green
+		particle.modulate = Color.green
 	else:
 		sprite_glow.modulate = Color.red
+		particle.modulate = Color.red
 	
-	print("percent: " + str(t_percent))
-	print("actual: " + str(type))
-	print()
+	point_disp.text = str(points)
 
 
 func _check_if_outside() -> void:
@@ -86,11 +90,12 @@ func _check_if_outside() -> void:
 		if position.x < start_end.x or position.x > start_end.y:
 			dieded = true
 			
-			$Tween.interpolate_property(self, "scale", scale, Vector2(scale.x - 0.2, scale.y - 0.2), 0.8, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-			$Tween.interpolate_property(self, "modulate:a", 1, 0, 0.8, Tween.TRANS_CUBIC, Tween.EASE_OUT)
-			$Tween.start()
+			sprite.hide()
+			point_disp.hide()
+			particle.show()
+			particle.emitting = true
 			
-			yield($Tween, "tween_all_completed")
+			yield(get_tree().create_timer(particle.lifetime), "timeout")
 			
 			queue_free()
 
@@ -99,6 +104,7 @@ func _check_if_outside() -> void:
 func _on_Packet_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event.is_action_pressed("ui_touch") and not dieded:
 		is_grabbing = true
+		raise()
 
 
 func _input(event: InputEvent) -> void:

@@ -1,15 +1,26 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Resources/Textures/Packet_base.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Game/Packet/Packet.gd" type="Script" id=2]
 [ext_resource path="res://Resources/Textures/Packet_glow.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Textures/Packet_shadow.png" type="Texture" id=4]
+[ext_resource path="res://Resources/Fonts/m5x7.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=2]
+size = 40
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=5]
+font_data = ExtResource( 5 )
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 42, 42 )
 
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0.523179, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
 [node name="Packet" type="KinematicBody2D"]
-position = Vector2( 355, 1099 )
 input_pickable = true
 script = ExtResource( 2 )
 
@@ -75,7 +86,58 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="PointDisp" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -80.0
+margin_top = -80.0
+margin_right = 80.0
+margin_bottom = 80.0
+rect_pivot_offset = Vector2( 80, 80 )
+custom_fonts/font = SubResource( 2 )
+text = "00"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="PointDisp"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -67.0
+margin_top = -68.0
+margin_right = -55.0
+margin_bottom = -55.0
+custom_fonts/font = SubResource( 5 )
+text = "KB"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Shape" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource( 1 )
+
+[node name="ExplosionParticle" type="CPUParticles2D" parent="."]
+visible = false
+emitting = false
+amount = 300
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+emission_shape = 2
+emission_rect_extents = Vector2( 42, 42 )
+direction = Vector2( 1, 1 )
+spread = 180.0
+gravity = Vector2( 0, 1250 )
+initial_velocity = 650.0
+initial_velocity_random = 1.0
+scale_amount = 6.15
+color_ramp = SubResource( 4 )
 [connection signal="input_event" from="." to="." method="_on_Packet_input_event"]

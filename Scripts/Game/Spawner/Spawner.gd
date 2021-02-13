@@ -25,3 +25,6 @@ func _process(delta: float) -> void:
 		instance.position.y = 1446
 		last_instance = instance
 		add_child(instance)
+		
+		if get_parent() is Stage:
+			instance.connect("passed", get_parent(), "_on_packet_passed")
