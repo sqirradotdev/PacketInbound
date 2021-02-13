@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Scripts/Game/Spawner/Spawner.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Game/Stage.gd" type="Script" id=2]
 [ext_resource path="res://Resources/Fonts/NotoSansUI_Bold.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Resources/Fonts/m5x7.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Resources/Textures/Stage/StageForeground.png" type="Texture" id=5]
+[ext_resource path="res://Resources/Textures/Packet/Packet_glow2.png" type="Texture" id=6]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.180645, 1 )
@@ -13,12 +14,19 @@ colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.858065, 1, 1, 1, 0 )
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
 
+[sub_resource type="DynamicFont" id=9]
+size = 48
+font_data = ExtResource( 4 )
+
 [sub_resource type="DynamicFont" id=3]
 size = 224
 font_data = ExtResource( 4 )
 
+[sub_resource type="CanvasItemMaterial" id=8]
+blend_mode = 1
+
 [sub_resource type="DynamicFont" id=4]
-size = 33
+size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
@@ -26,8 +34,8 @@ font_data = ExtResource( 3 )
 code = "shader_type canvas_item;
 render_mode unshaded;
 
-uniform float AMT = 0.2;
-uniform float SPEED = 0.6;
+uniform float amount = 0.2;
+uniform float speed = 0.6;
 
 
 float random2d(vec2 n) { 
@@ -44,13 +52,13 @@ float insideRange(float v, float bottom, float top) {
    
 void fragment()
 {
-	float time = floor(TIME * SPEED * 60.0);    
+	float time = floor(TIME * speed * 60.0);    
 	vec2 uv = SCREEN_UV;
 	
 	vec3 outCol = texture(SCREEN_TEXTURE, uv).rgb;
 	
-	float maxOffset = AMT/2.0;
-	for (float i = 0.0; i < 10.0 * AMT; i += 1.0) {
+	float maxOffset = amount / 2.0;
+	for (float i = 0.0; i < 10.0 * amount; i += 1.0) {
 		float sliceY = random2d(vec2(time , 2345.0 + float(i)));
 		float sliceH = random2d(vec2(time , 9035.0 + float(i))) * 0.25;
 		float hOffset = randomRange(vec2(time , 9625.0 + float(i)), -maxOffset, maxOffset);
@@ -61,7 +69,7 @@ void fragment()
 		}
 	}
 	
-	float maxColOffset = AMT/6.0;
+	float maxColOffset = amount / 6.0;
 	float rnd = random2d(vec2(time , 9545.0));
 	vec2 colOffset = vec2(randomRange(vec2(time , 9545.0),-maxColOffset,maxColOffset), 
 						  randomRange(vec2(time , 7205.0),-maxColOffset,maxColOffset));
@@ -80,8 +88,11 @@ void fragment()
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = SubResource( 5 )
-shader_param/AMT = 0.0
-shader_param/SPEED = 0.6
+shader_param/amount = 0.2
+shader_param/speed = 0.6
+
+[sub_resource type="CanvasItemMaterial" id=7]
+blend_mode = 1
 
 [node name="Stage" type="Control"]
 anchor_left = 0.5
@@ -143,7 +154,30 @@ __meta__ = {
 margin_top = -838.0
 margin_right = 720.0
 margin_bottom = 314.0
+rect_clip_content = true
 color = Color( 0.096, 0.08, 0.1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+anchor_right = 1.0
+margin_top = 38.0
+margin_bottom = 76.0
+custom_fonts/font = SubResource( 9 )
+text = "CONNECTION HEALTH"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeDisplay" type="Label" parent="."]
+anchor_right = 1.0
+margin_top = 239.0
+margin_bottom = 277.0
+custom_fonts/font = SubResource( 9 )
+text = "UPTIME: 00:00"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -153,8 +187,8 @@ modulate = Color( 0, 1, 0, 1 )
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_top = -621.0
-margin_bottom = -381.0
+margin_top = -581.0
+margin_bottom = -403.0
 custom_fonts/font = SubResource( 3 )
 text = "100"
 align = 1
@@ -162,6 +196,20 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Glow" type="Sprite" parent="GaugeDisplay"]
+self_modulate = Color( 1, 1, 1, 0.376471 )
+material = SubResource( 8 )
+position = Vector2( 303, 105 )
+scale = Vector2( 1.67969, 1.17188 )
+texture = ExtResource( 6 )
+
+[node name="Glow2" type="Sprite" parent="GaugeDisplay"]
+self_modulate = Color( 1, 1, 1, 0.376471 )
+material = SubResource( 8 )
+position = Vector2( 409, 105 )
+scale = Vector2( 1.67969, 1.17188 )
+texture = ExtResource( 6 )
 
 [node name="StreamArea" type="ReferenceRect" parent="."]
 visible = false
@@ -174,10 +222,11 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-visible = false
-margin_top = 769.889
-margin_right = 131.0
-margin_bottom = 962.889
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 389.0
+margin_bottom = 534.0
 custom_fonts/font = SubResource( 4 )
 text = "Gauge:
 Time:
@@ -196,5 +245,18 @@ margin_top = -838.0
 margin_bottom = 838.0
 mouse_filter = 2
 __meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorFlash" type="ColorRect" parent="."]
+material = SubResource( 7 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -838.0
+margin_bottom = 838.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }

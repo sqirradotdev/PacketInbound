@@ -1,9 +1,11 @@
 extends KinematicBody2D
 signal passed
+signal destroyed
 
 onready var shape = $Shape
 onready var sprite = $Sprite
 onready var sprite_glow = $Sprite/Glow
+onready var sprite_glow2 = $Glow2
 onready var point_disp = $PointDisp
 onready var particle = $ExplosionParticle
 onready var tween = $Tween
@@ -20,7 +22,7 @@ var points: int = 0
 var rng_size: RandomNumberGenerator = RandomNumberGenerator.new()
 var rng_types: RandomNumberGenerator = RandomNumberGenerator.new()
 
-var dieded: bool = false # Hi it's me le epic 9gag army
+var dieded: bool = false # le epic 9gag army
 var is_grabbing: bool = false
 
 var good_chance: int = 80
@@ -70,6 +72,7 @@ func _randomize() -> void:
 	
 	var s_p: float = 1 + (s - 84) / (160 - 84)
 	point_disp.rect_scale = Vector2(s_p ,s_p)
+	sprite_glow2.scale = Vector2(s_p, s_p)
 	
 	points = stepify(64 * (s / 200), 2)
 	
@@ -77,13 +80,17 @@ func _randomize() -> void:
 	var t_percent: int = rng_types.randi_range(1, 100)
 	type = 1 if t_percent >= good_chance else 0
 	
-	# Temporary, will supply sprites later
+	# Set color based on type
 	if type == PACKET_GOOD:
 		sprite_glow.modulate = Color.green
-		particle.modulate = Color.green * 2
+		sprite_glow2.modulate = Color.green
+		particle.modulate = Color.green
 	else:
 		sprite_glow.modulate = Color.red
-		particle.modulate = Color.red * 2
+		sprite_glow2.modulate = Color.red
+		particle.modulate = Color.red
+	
+	sprite_glow2.modulate.v = 0.4
 	
 	point_disp.text = str(points)
 
@@ -94,10 +101,16 @@ func _check_if_outside() -> void:
 		if position.x < start_end.x or position.x > start_end.y:
 			dieded = true
 			
+			emit_signal("destroyed")
+			
 			sprite.hide()
 			point_disp.hide()
 			particle.show()
 			particle.emitting = true
+			
+			sprite_glow2.scale = sprite_glow2.scale * 2
+			tween.interpolate_property(sprite_glow2, "modulate:v", 1.5, 0, 0.5)
+			tween.start()
 			
 			yield(get_tree().create_timer(particle.lifetime), "timeout")
 			

@@ -3,8 +3,10 @@ class_name Stage
 
 onready var spawner = $Spawner
 onready var gauge_display = $GaugeDisplay
+onready var time_display = $TimeDisplay
 onready var stream_area = $StreamArea
 onready var glitch_filter = $GlitchFilter
+onready var color_flash = $ColorFlash
 onready var tween = $Tween
 
 var good_chance: int = 60
@@ -51,12 +53,14 @@ func _process(delta: float) -> void:
 		good_chance = clamp(good_chance, good_chance_min, 100)
 		prev_elapsed = elapsed
 	
-	gauge_display.modulate.r = (1 - (gauge / 100)) * 10
+	gauge_display.modulate.r = clamp(1 - (gauge - 50) / (100 - 50), 0, 1)
 	gauge_display.modulate.g = 1.0 - clamp(1 - (gauge - 0) / (50 - 0), 0, 1)
-	
-	$Label.text = "Gauge: " + str(gauge) + "\nTime: " + elapsed_str + "\nChance: " + str(100 - good_chance) + "%\nSpeed: " + str(speed)
-	
 	gauge_display.text = str(ceil(gauge))
+	
+	time_display.text = "UPTIME: " + str(minutes) + ":" + str(seconds)
+	
+	# Debug purposes
+	$Label.text = "Gauge: " + str(gauge) + "\nTime: " + elapsed_str + "\nChance: " + str(100 - good_chance) + "%\nSpeed: " + str(speed)
 
 
 func _on_packet_passed(point: int) -> void:
@@ -65,10 +69,13 @@ func _on_packet_passed(point: int) -> void:
 	# If negative (bad packet)
 	if point < 0:
 		glitch_filter.show()
+		color_flash.color.r = 1
+		color_flash.color.v = 0.001
 		tween.interpolate_method(self, "_set_glitch_amount", 0.2, 0, 0.7)
 		tween.interpolate_property(glitch_filter, "visible", true, false, 0.7)
+		tween.interpolate_property(color_flash, "color:v", 0.3, 0, 0.3)
 		tween.start()
 
 
 func _set_glitch_amount(amount: float) -> void:
-	glitch_filter.material.set_shader_param("AMT", amount)
+	glitch_filter.material.set_shader_param("amount", amount)
