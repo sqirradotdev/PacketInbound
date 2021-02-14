@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Arkav Packet Sortet"
+config/name="Packet Inbound"
 run/main_scene="res://Scripts/Game/Stage.tscn"
 config/icon="res://icon.png"
 

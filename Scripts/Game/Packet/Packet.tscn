@@ -8,29 +8,29 @@
 [ext_resource path="res://Resources/Textures/Packet/Packet_glow2.png" type="Texture" id=6]
 [ext_resource path="res://Resources/Audio/SFX/packet_destroy.wav" type="AudioStream" id=7]
 
-[sub_resource type="AudioStreamRandomPitch" id=7]
+[sub_resource type="AudioStreamRandomPitch" id=1]
 audio_stream = ExtResource( 7 )
 random_pitch = 1.25
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=2]
 size = 40
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 5 )
 
-[sub_resource type="CanvasItemMaterial" id=6]
+[sub_resource type="CanvasItemMaterial" id=4]
 blend_mode = 1
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=5]
+resource_local_to_scene = true
 extents = Vector2( 42, 42 )
 
-[sub_resource type="Gradient" id=4]
+[sub_resource type="Gradient" id=6]
 offsets = PoolRealArray( 0.523179, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="Animation" id=5]
-resource_name = "pulsating"
+[sub_resource type="Animation" id=7]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite/Glow:self_modulate")
@@ -52,7 +52,7 @@ script = ExtResource( 2 )
 [node name="Tween" type="Tween" parent="."]
 
 [node name="DestroySound" type="AudioStreamPlayer2D" parent="."]
-stream = SubResource( 7 )
+stream = SubResource( 1 )
 bus = "SFX"
 
 [node name="Sprite" type="NinePatchRect" parent="."]
@@ -126,7 +126,7 @@ margin_top = -80.0
 margin_right = 80.0
 margin_bottom = 80.0
 rect_pivot_offset = Vector2( 80, 80 )
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
 text = "00"
 align = 1
 valign = 1
@@ -143,7 +143,7 @@ margin_left = -67.0
 margin_top = -68.0
 margin_right = -55.0
 margin_bottom = -55.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 text = "KB"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -151,14 +151,13 @@ __meta__ = {
 
 [node name="Glow2" type="Sprite" parent="."]
 modulate = Color( 0, 0.2, 0, 1 )
-material = SubResource( 6 )
+material = SubResource( 4 )
 position = Vector2( 1, -1 )
 scale = Vector2( 1.125, 1.125 )
 texture = ExtResource( 6 )
 
 [node name="Shape" type="CollisionShape2D" parent="."]
-visible = false
-shape = SubResource( 3 )
+shape = SubResource( 5 )
 
 [node name="ExplosionParticle" type="CPUParticles2D" parent="."]
 visible = false
@@ -177,9 +176,9 @@ gravity = Vector2( 0, 1250 )
 initial_velocity = 760.0
 initial_velocity_random = 1.0
 scale_amount = 6.15
-color_ramp = SubResource( 4 )
+color_ramp = SubResource( 6 )
 
 [node name="Animation" type="AnimationPlayer" parent="."]
 autoplay = "pulsating"
-anims/pulsating = SubResource( 5 )
+anims/pulsating = SubResource( 7 )
 [connection signal="input_event" from="." to="." method="_on_Packet_input_event"]

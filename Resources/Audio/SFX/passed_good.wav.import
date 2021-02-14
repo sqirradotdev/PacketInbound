@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/passed_good.wav-8abc67ed0a55a18739cbcd3210b07014.sample"
+
+[deps]
+
+source_file="res://Resources/Audio/SFX/passed_good.wav"
+dest_files=[ "res://.import/passed_good.wav-8abc67ed0a55a18739cbcd3210b07014.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

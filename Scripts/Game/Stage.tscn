@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Scripts/Game/Spawner/Spawner.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Game/Stage.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Scripts/Game/GameOverScreen.gd" type="Script" id=7]
 [ext_resource path="res://Resources/Audio/SFX/game_over.wav" type="AudioStream" id=8]
 [ext_resource path="res://Resources/Audio/Music/game.ogg" type="AudioStream" id=9]
+[ext_resource path="res://Scripts/Game/PassedParticle.gd" type="Script" id=10]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.180645, 1 )
@@ -16,6 +17,10 @@ colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.858065, 1, 1, 1, 0 )
 
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
+
+[sub_resource type="Gradient" id=12]
+offsets = PoolRealArray( 0.384106, 0.543046 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 48
@@ -130,8 +135,11 @@ stream = ExtResource( 9 )
 autoplay = true
 bus = "Music"
 
-[node name="GameOverAudio" type="AudioStreamPlayer" parent="."]
+[node name="GameOverSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
+bus = "SFX"
+
+[node name="PassedSound" type="AudioStreamPlayer" parent="."]
 bus = "SFX"
 
 [node name="ColorBg" type="ColorRect" parent="." groups=[
@@ -144,6 +152,7 @@ margin_bottom = 1963.0
 mouse_filter = 2
 color = Color( 0.168627, 0.141176, 0.176471, 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -157,6 +166,7 @@ mouse_filter = 2
 texture = ExtResource( 5 )
 expand = true
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -164,7 +174,7 @@ __meta__ = {
 "Game",
 ] instance=ExtResource( 1 )]
 
-[node name="TextureRect" type="TextureRect" parent="." groups=[
+[node name="PassGradient" type="TextureRect" parent="." groups=[
 "Game",
 ]]
 modulate = Color( 0, 0, 0, 0.470588 )
@@ -179,6 +189,26 @@ expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PassedParticle" type="CPUParticles2D" parent="."]
+position = Vector2( 360, 281 )
+emitting = false
+amount = 200
+lifetime = 1.8
+one_shot = true
+speed_scale = 2.25
+explosiveness = 0.59
+local_coords = false
+emission_shape = 2
+emission_rect_extents = Vector2( 225, 1 )
+direction = Vector2( 0, 1 )
+spread = 0.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 250.0
+initial_velocity_random = 1.0
+scale_amount = 7.5
+color_ramp = SubResource( 12 )
+script = ExtResource( 10 )
 
 [node name="GaugeBackground" type="ColorRect" parent="." groups=[
 "Game",
@@ -292,12 +322,15 @@ __meta__ = {
 }
 
 [node name="GameOverScreen" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 7 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Tween" type="Tween" parent="GameOverScreen"]
 
 [node name="ColorBg" type="ColorRect" parent="GameOverScreen"]
 anchor_right = 1.0

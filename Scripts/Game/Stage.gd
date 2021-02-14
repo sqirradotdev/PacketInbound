@@ -7,13 +7,19 @@ onready var spawner = $Spawner
 onready var gauge_display = $GaugeDisplay
 onready var time_display = $TimeDisplay
 onready var stream_area = $StreamArea
+onready var pass_gradient = $PassGradient
 onready var glitch_filter = $GlitchFilter
 onready var color_flash = $ColorFlash
+onready var passed_particle = $PassedParticle
 onready var music = $Music
 onready var game_over_screen = $GameOverScreen
-onready var game_over_audio = $GameOverAudio
+onready var game_over_sound = $GameOverSound
+onready var passed_sound = $PassedSound
 onready var tween = $Tween
 onready var tween2 = $Tween2
+
+var audio_passed_good = preload("res://Resources/Audio/SFX/passed_good.wav")
+var audio_passed_bad = preload("res://Resources/Audio/SFX/passed_bad.wav")
 
 var active: bool = false
 
@@ -38,6 +44,10 @@ func _ready() -> void:
 	stream_width_start_end = Vector2(stream_area.rect_position.x, stream_area.rect_position.x + stream_area.rect_size.x)
 	game_over_screen.hide()
 	
+	var p_dup = passed_particle.duplicate()
+	passed_particle.queue_free()
+	passed_particle = p_dup
+	
 	yield(get_tree().create_timer(2), "timeout")
 	call_deferred("_start")
 
@@ -57,9 +67,7 @@ func _process(delta: float) -> void:
 	
 		time_now = OS.get_unix_time()
 		elapsed = time_now - time_start
-		var minutes = elapsed / 60
-		var seconds = elapsed % 60
-		var elapsed_str = str(minutes).pad_zeros(2) + ":" + str(seconds).pad_zeros(2)
+		var elapsed_str = format_second(elapsed)
 		
 		# Difficulty step every 50 seconds
 		if elapsed > 1 and not elapsed % 10 and not elapsed == prev_elapsed and good_chance > good_chance_min:
@@ -80,6 +88,12 @@ func _process(delta: float) -> void:
 		$Label.text = "Gauge: " + str(gauge) + "\nTime: " + elapsed_str + "\nChance: " + str(100 - good_chance) + "%\nSpeed: " + str(speed)
 
 
+func format_second(second: int) -> String:
+	var minutes = second / 60
+	var seconds = second % 60
+	return str(minutes).pad_zeros(2) + ":" + str(seconds).pad_zeros(2)
+
+
 func _start() -> void:
 	spawner.active = true
 	active = true
@@ -93,7 +107,7 @@ func _game_over() -> void:
 	gauge_display.text = str(0)
 	
 	emit_signal("destroy_all_packets")
-	game_over_audio.play()
+	game_over_sound.play()
 	
 	tween.stop_all()
 	
@@ -132,7 +146,27 @@ func _on_packet_passed(point: int) -> void:
 			tween.interpolate_method(self, "_set_glitch_amount", 0.2, 0, 0.7)
 			tween.interpolate_property(glitch_filter, "visible", true, false, 0.7)
 			tween.interpolate_property(color_flash, "color:v", 0.3, 0, 0.3)
+			tween.interpolate_property(pass_gradient, "modulate", Color(1, 0, 0, 0.78), Color(0, 0, 0, 0.47), 0.5)
 			tween.start()
+			
+			var p_ins = passed_particle.duplicate()
+			add_child_below_node(pass_gradient, p_ins)
+			p_ins.modulate = Color.red
+			
+			passed_sound.stop()
+			passed_sound.stream = audio_passed_bad
+			passed_sound.play()
+		else:
+			tween.interpolate_property(pass_gradient, "modulate", Color(0, 1, 0, 0.78), Color(0, 0, 0, 0.47), 0.5)
+			tween.start()
+			
+			var p_ins = passed_particle.duplicate()
+			add_child_below_node(pass_gradient, p_ins)
+			p_ins.modulate = Color.green
+			
+			passed_sound.stop()
+			passed_sound.stream = audio_passed_good
+			passed_sound.play()
 
 
 func _set_glitch_amount(amount: float) -> void:
