@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/start_game.wav-b51a2dc0708496356b6686e881ecccd9.sample"
+
+[deps]
+
+source_file="res://Resources/Audio/SFX/start_game.wav"
+dest_files=[ "res://.import/start_game.wav-b51a2dc0708496356b6686e881ecccd9.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

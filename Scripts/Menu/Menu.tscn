@@ -1,0 +1,327 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Resources/Audio/Music/menu.ogg" type="AudioStream" id=1]
+[ext_resource path="res://Resources/Textures/Menu/Logo_top.png" type="Texture" id=2]
+[ext_resource path="res://Resources/Textures/Menu/Logo_bottom.png" type="Texture" id=3]
+[ext_resource path="res://Resources/Textures/Menu/wiggle.tres" type="Shader" id=4]
+[ext_resource path="res://Resources/Fonts/m5x7.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Scripts/Menu/Menu.gd" type="Script" id=6]
+[ext_resource path="res://Resources/Audio/SFX/start_game.wav" type="AudioStream" id=7]
+
+[sub_resource type="DynamicFont" id=5]
+size = 64
+font_data = ExtResource( 5 )
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 4 )
+shader_param/time_offset = 0.0
+shader_param/speed = 3.0
+shader_param/x_intensity = 3.0
+shader_param/y_intensity = 1.0
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 4 )
+shader_param/time_offset = null
+shader_param/speed = 1.0
+shader_param/x_intensity = 2.0
+shader_param/y_intensity = 3.0
+
+[sub_resource type="StyleBoxFlat" id=7]
+content_margin_left = 20.0
+content_margin_right = 20.0
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+content_margin_left = 20.0
+content_margin_right = 20.0
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=10]
+
+[sub_resource type="DynamicFont" id=6]
+size = 64
+font_data = ExtResource( 5 )
+
+[sub_resource type="CanvasItemMaterial" id=11]
+blend_mode = 1
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform int sampleCount = 50;
+uniform float blur = 0.25;
+uniform float falloff = 3.0;
+
+
+void fragment()
+{
+	vec2 destCoord = SCREEN_UV;
+	
+	vec2 direction = normalize(destCoord - 0.5); 
+	vec2 velocity = direction * blur * pow(length(destCoord - 0.5), falloff);
+	float inverseSampleCount = 1.0 / float(sampleCount); 
+	
+	mat3 increments = mat3(vec3(velocity * 1.0 * inverseSampleCount, 0.0),
+	vec3(velocity * 2.0 * inverseSampleCount, 0.0),
+	vec3(velocity * 4.0 * inverseSampleCount, 0.0));
+	
+	vec3 accumulator = vec3(0);
+	mat3 offsets = mat3(0); 
+    
+    for (int i = 0; i < sampleCount; i++) {
+        accumulator.r += texture(SCREEN_TEXTURE, destCoord + offsets[0].xy).r; 
+        accumulator.g += texture(SCREEN_TEXTURE, destCoord + offsets[1].xy).g; 
+        accumulator.b += texture(SCREEN_TEXTURE, destCoord + offsets[2].xy).b; 
+        
+        offsets[0] -= increments[0];
+        offsets[1] -= increments[1];
+        offsets[2] -= increments[2];
+    }
+
+	COLOR = vec4(accumulator / float(sampleCount), 1.0);
+}
+"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/sampleCount = 10
+shader_param/blur = 0.0
+shader_param/falloff = 3.0
+
+[sub_resource type="DynamicFont" id=12]
+size = 64
+font_data = ExtResource( 5 )
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 1 )
+autoplay = true
+bus = "Music"
+
+[node name="StartGameSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+bus = "SFX"
+
+[node name="ColorBg" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 0.113725, 0.0941176, 0.121569, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Clickanywhere" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = 85.0
+margin_right = 360.0
+margin_bottom = 136.0
+custom_fonts/font = SubResource( 5 )
+text = "Click anywhere to play!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Logo" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_top = -164.0
+margin_bottom = -164.0
+rect_scale = Vector2( 4, 4 )
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Top" type="TextureRect" parent="Logo"]
+material = SubResource( 1 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -23.0
+margin_right = 90.0
+margin_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+
+[node name="Bottom" type="TextureRect" parent="Logo"]
+material = SubResource( 2 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -23.0
+margin_right = 90.0
+margin_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Version" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -80.0
+margin_top = -51.0
+custom_fonts/font = SubResource( 5 )
+text = "v1.0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ClickRegion" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CreditsBtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -292.0
+margin_top = 518.0
+margin_right = -104.0
+margin_bottom = 579.0
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
+custom_styles/disabled = SubResource( 7 )
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+shortcut_in_tooltip = false
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WhiteOverlay" type="ColorRect" parent="."]
+visible = false
+material = SubResource( 11 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RadialBlurFilter" type="ColorRect" parent="."]
+visible = false
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlackOverlay" type="ColorRect" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Credits" type="ColorRect" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.780392 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="Credits"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -294.5
+margin_top = -349.5
+margin_right = 294.5
+margin_bottom = 349.5
+custom_fonts/font = SubResource( 12 )
+text = "DizzyAri is:
+I Gede Hari Kresna Wiyasa (gedehari)
+
+Art, music, and game design by gedehari
+
+Fonts used:
+- m5x7
+- Noto Sans UI
+
+Made for Arkav Game Jam 2021"
+align = 1
+autowrap = true
+
+[node name="BackBtn" type="Button" parent="Credits"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -292.0
+margin_top = 518.0
+margin_right = -104.0
+margin_bottom = 579.0
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 9 )
+custom_styles/focus = SubResource( 10 )
+custom_styles/disabled = SubResource( 7 )
+custom_styles/normal = SubResource( 7 )
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+shortcut_in_tooltip = false
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="ClickRegion" to="." method="_on_ClickRegion_gui_input"]
+[connection signal="pressed" from="CreditsBtn" to="." method="_on_CreditsBtn_pressed"]
+[connection signal="pressed" from="Credits/BackBtn" to="." method="_on_BackBtn_pressed"]

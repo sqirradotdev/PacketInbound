@@ -1,5 +1,9 @@
 extends Node
 
+const interact_verb: Dictionary = {
+	"desktop": "Click",
+	"mobile" : "Tap"
+}
 
-func _ready() -> void:
-	pass
+
+var played_once: bool = false

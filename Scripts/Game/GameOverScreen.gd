@@ -5,10 +5,13 @@ onready var tween = $Tween
 var final_time: int
 var final_time_interp: int = 0
 
+var can_retry: bool = false
+
 
 func _ready() -> void:
 	$Label.show()
 	$Label2.hide()
+	$Label3.hide()
 	$FinalTime.hide()
 	
 	set_process(false)
@@ -30,6 +33,7 @@ func go() -> void:
 	yield(tween, "tween_all_completed")
 	
 	$Label2.show()
+	$Label3.show()
 	$FinalTime.show()
 	
 	get_parent().glitch_filter.show()
@@ -37,3 +41,13 @@ func go() -> void:
 	tween.interpolate_property(get_parent().glitch_filter, "visible", true, false, 0.7)
 	tween.interpolate_property(self, "final_time_interp", 0, final_time, 1.5)
 	tween.start()
+	
+	yield(get_tree().create_timer(0.5), "timeout")
+	
+	can_retry = true
+
+
+func _on_Label3_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_touch") and can_retry:
+		get_tree().reload_current_scene()
+

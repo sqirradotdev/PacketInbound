@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Scripts/Game/Spawner/Spawner.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Game/Stage.gd" type="Script" id=2]
@@ -10,6 +10,10 @@
 [ext_resource path="res://Resources/Audio/SFX/game_over.wav" type="AudioStream" id=8]
 [ext_resource path="res://Resources/Audio/Music/game.ogg" type="AudioStream" id=9]
 [ext_resource path="res://Scripts/Game/PassedParticle.gd" type="Script" id=10]
+[ext_resource path="res://Resources/Audio/SFX/passed_good.wav" type="AudioStream" id=11]
+[ext_resource path="res://Resources/Audio/SFX/passed_bad.wav" type="AudioStream" id=12]
+[ext_resource path="res://Resources/Audio/SFX/start_glitch.wav" type="AudioStream" id=13]
+[ext_resource path="res://Resources/Fonts/NotoSansUI_Regular.ttf" type="DynamicFontData" id=14]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.180645, 1 )
@@ -18,38 +22,38 @@ colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.858065, 1, 1, 1, 0 )
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
 
-[sub_resource type="Gradient" id=12]
+[sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0.384106, 0.543046 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 48
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=5]
 size = 224
 font_data = ExtResource( 4 )
-
-[sub_resource type="CanvasItemMaterial" id=5]
-blend_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id=6]
 blend_mode = 1
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="CanvasItemMaterial" id=7]
+blend_mode = 1
+
+[sub_resource type="DynamicFont" id=8]
 size = 24
 use_filter = true
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=9]
 size = 64
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=10]
 size = 192
 font_data = ExtResource( 4 )
 
-[sub_resource type="Shader" id=10]
+[sub_resource type="Shader" id=11]
 code = "shader_type canvas_item;
 render_mode unshaded;
 
@@ -105,12 +109,21 @@ void fragment()
 }
 "
 
-[sub_resource type="ShaderMaterial" id=11]
-shader = SubResource( 10 )
+[sub_resource type="ShaderMaterial" id=12]
+shader = SubResource( 11 )
 shader_param/amount = 0.2
 shader_param/speed = 0.6
 
+[sub_resource type="DynamicFont" id=14]
+size = 25
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 25
+font_data = ExtResource( 14 )
+
 [node name="Stage" type="Control"]
+pause_mode = 2
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -131,15 +144,24 @@ __meta__ = {
 [node name="Tween2" type="Tween" parent="."]
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
 stream = ExtResource( 9 )
-autoplay = true
 bus = "Music"
+
+[node name="GlitchStart" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+bus = "SFX"
 
 [node name="GameOverSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
 bus = "SFX"
 
-[node name="PassedSound" type="AudioStreamPlayer" parent="."]
+[node name="PassedSoundGood" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+bus = "SFX"
+
+[node name="PassedSoundBad" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
 bus = "SFX"
 
 [node name="ColorBg" type="ColorRect" parent="." groups=[
@@ -207,7 +229,7 @@ gravity = Vector2( 0, 0 )
 initial_velocity = 250.0
 initial_velocity_random = 1.0
 scale_amount = 7.5
-color_ramp = SubResource( 12 )
+color_ramp = SubResource( 3 )
 script = ExtResource( 10 )
 
 [node name="GaugeBackground" type="ColorRect" parent="." groups=[
@@ -228,7 +250,7 @@ __meta__ = {
 anchor_right = 1.0
 margin_top = 38.0
 margin_bottom = 76.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "CONNECTION HEALTH"
 align = 1
 __meta__ = {
@@ -241,7 +263,7 @@ __meta__ = {
 anchor_right = 1.0
 margin_top = 239.0
 margin_bottom = 277.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "UPTIME: 00:00"
 align = 1
 __meta__ = {
@@ -257,7 +279,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -581.0
 margin_bottom = -403.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 text = "100"
 align = 1
 valign = 1
@@ -267,14 +289,14 @@ __meta__ = {
 
 [node name="Glow" type="Sprite" parent="GaugeDisplay"]
 self_modulate = Color( 1, 1, 1, 0.376471 )
-material = SubResource( 5 )
+material = SubResource( 6 )
 position = Vector2( 303, 105 )
 scale = Vector2( 1.67969, 1.17188 )
 texture = ExtResource( 6 )
 
 [node name="Glow2" type="Sprite" parent="GaugeDisplay"]
 self_modulate = Color( 1, 1, 1, 0.376471 )
-material = SubResource( 5 )
+material = SubResource( 6 )
 position = Vector2( 409, 105 )
 scale = Vector2( 1.67969, 1.17188 )
 texture = ExtResource( 6 )
@@ -294,7 +316,7 @@ __meta__ = {
 [node name="ColorFlash" type="ColorRect" parent="." groups=[
 "Game",
 ]]
-material = SubResource( 6 )
+material = SubResource( 7 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -838.0
@@ -307,12 +329,13 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
+visible = false
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = 389.0
 margin_bottom = 534.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 8 )
 text = "Gauge:
 Time:
 Chance:
@@ -325,6 +348,7 @@ __meta__ = {
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 7 )
 __meta__ = {
 "_edit_lock_": true
@@ -337,7 +361,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -1962.0
 margin_bottom = 1963.0
-mouse_filter = 2
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -349,8 +372,8 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -25.5
 margin_bottom = 25.5
-custom_fonts/font = SubResource( 8 )
-text = "Disconnected..."
+custom_fonts/font = SubResource( 9 )
+text = "--CONNECTION DOWN--"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -362,9 +385,24 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -104.0
 margin_bottom = -53.0
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 text = "TOTAL UPTIME:"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="GameOverScreen"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 91.0
+margin_bottom = 240.0
+mouse_filter = 0
+custom_fonts/font = SubResource( 9 )
+text = "Retry"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -375,7 +413,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -76.0
 margin_bottom = 76.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
 text = "00:00"
 align = 1
 __meta__ = {
@@ -384,7 +422,7 @@ __meta__ = {
 
 [node name="GlitchFilter" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 11 )
+material = SubResource( 12 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -838.0
@@ -393,3 +431,55 @@ mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Tutorial" type="ColorRect" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -326.0
+margin_right = 360.0
+margin_bottom = 2603.0
+color = Color( 0, 0, 0, 0.313726 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Tutorial"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 155.0
+margin_top = 140.0
+margin_right = -155.0
+custom_fonts/bold_font = SubResource( 14 )
+custom_fonts/normal_font = SubResource( 13 )
+bbcode_enabled = true
+bbcode_text = "[center]How to Play:
+
+This is an [b]internet stream of packets.[/b] Incoming packets will come from below and to the top.
+
+Your job is to eliminate [b][color=red]RED PACKETS[/color][/b] by dragging them to the side.
+
+A [b]CONNECTION HEALTH[/b] gauge monitors the connection health. It decreases gradually. Maintain your health by letting [b][color=lime]GREEN PACKETS[/color][/b] pass. Once it hits 0, it's game over.
+
+{ca}
+[/center]"
+text = "How to Play:
+
+This is an internet stream of packets. Incoming packets will come from below and to the top.
+
+Your job is to eliminate RED PACKETS by dragging them to the side.
+
+A CONNECTION HEALTH gauge monitors the connection health. It decreases gradually. Maintain your health by letting GREEN PACKETS pass. Once it hits 0, it's game over.
+
+{ca}
+"
+fit_content_height = true
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="gui_input" from="GameOverScreen/Label3" to="GameOverScreen" method="_on_Label3_gui_input"]
