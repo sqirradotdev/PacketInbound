@@ -7,3 +7,7 @@ const interact_verb: Dictionary = {
 
 
 var played_once: bool = false
+
+func _ready() -> void:
+	print("Global singleton!")
+	print("Played once: " + str(played_once) + "\n")

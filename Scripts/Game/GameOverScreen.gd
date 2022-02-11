@@ -11,7 +11,8 @@ var can_retry: bool = false
 func _ready() -> void:
 	$Label.show()
 	$Label2.hide()
-	$Label3.hide()
+	$RetryBtn.hide()
+	$MainMenuBtn.hide()
 	$FinalTime.hide()
 	
 	set_process(false)
@@ -33,7 +34,8 @@ func go() -> void:
 	yield(tween, "tween_all_completed")
 	
 	$Label2.show()
-	$Label3.show()
+	$RetryBtn.show()
+	$MainMenuBtn.show()
 	$FinalTime.show()
 	
 	get_parent().glitch_filter.show()
@@ -47,7 +49,13 @@ func go() -> void:
 	can_retry = true
 
 
-func _on_Label3_gui_input(event: InputEvent) -> void:
+func _on_RetryBtn_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_touch") and can_retry:
 		get_tree().reload_current_scene()
 
+
+func _on_MainMenuBtn_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_touch") and can_retry:
+		SceneLoader.start_load("res://Scripts/Menu/Menu.tscn", true)
+		yield(SceneLoader, "done")
+		get_parent().queue_free()

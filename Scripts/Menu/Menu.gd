@@ -1,17 +1,10 @@
 extends Control
 
-onready var cl_label = $Clickanywhere
-
 var can_transition: bool = false
 
 
 func _ready() -> void:
 	$Credits.hide()
-	
-	var text = " anywhere to play!"
-	
-	if OS.has_feature("mobile"):
-		cl_label.text = Global.interact_verb.get("mobile") + text
 	
 	$BlackOverlay.show()
 	$Tween.interpolate_property($BlackOverlay, "color:a", 1, 0, 0.75)
@@ -22,8 +15,9 @@ func _ready() -> void:
 	can_transition = true
 
 
-func _on_ClickRegion_gui_input(event: InputEvent) -> void:
+func _on_PlayBtn_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_touch") and can_transition:
+		$SettingsBtn.disabled = true
 		$CreditsBtn.disabled = true
 		call_deferred("_transition")
 
@@ -36,12 +30,16 @@ func _transition() -> void:
 	
 	$BlackOverlay.color.a = 0
 	$BlackOverlay.show()
-	
 	$WhiteOverlay.show()
+	
+	rect_pivot_offset = Vector2(rect_size.x / 2, rect_size.y / 2)
+	
 	$Tween.interpolate_property($WhiteOverlay, "color:a", 1, 0, 0.7)
-	$Tween.interpolate_method(self, "_set_shader_strength", 0, 3, 1, Tween.TRANS_CUBIC, Tween.EASE_IN, 0.25)
-	$Tween.interpolate_property($BlackOverlay, "color:a", 0, 1, 0.3, Tween.TRANS_LINEAR, Tween.EASE_OUT, 1.1)
+	$Tween.interpolate_method(self, "_set_shader_strength", 0, -0.2, 1, Tween.TRANS_EXPO, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "rect_scale", Vector2(1, 1), Vector2(3.2, 3.2), 1, Tween.TRANS_EXPO, Tween.EASE_IN)
+	$Tween.interpolate_property($BlackOverlay, "color:a", 0, 1, 0.3, Tween.TRANS_LINEAR, Tween.EASE_OUT, 0.7)
 	$Tween.start()
+	
 	$RadialBlurFilter.show()
 	
 	yield(get_tree().create_timer(3), "timeout")

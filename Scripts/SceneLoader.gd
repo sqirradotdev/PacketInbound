@@ -14,10 +14,12 @@ func start_load(path: String, immediate: bool) -> void:
 	
 	if OS.has_feature("HTML5"):
 		if instance_immediately:
-			call_deferred("_html5_load_im", path)
+			call_deferred("_html5_load_immediate", path)
 	else:
 		thread = Thread.new()
 		thread.start(self, "_thread_load", path)
+	
+	print("Loading scene from path: " + path)
 
 
 func _thread_load(path: String) -> void:
@@ -28,15 +30,15 @@ func _thread_load(path: String) -> void:
 	while true:
 		var err = ril.poll()
 		if err == ERR_FILE_EOF:
-			print("Epic! Load success!")
+			print("Scene loaded.")
 			res = ril.get_resource()
 			break
 		elif err != OK:
-			printerr("Oopsies, loading failed.")
+			printerr("Scene load failed, error code " + str(err))
 			return
 	
 	if instance_immediately:
-		call_deferred("_end_load_im", res)
+		call_deferred("_end_load_immediate", res)
 	else:
 		call_deferred("_end_load", res)
 
@@ -44,9 +46,11 @@ func _thread_load(path: String) -> void:
 func _end_load(res: Resource) -> void:
 	thread.wait_to_finish()
 	emit_signal("done", res)
+	
+	print("Scene resource is passed to a signal")
 
 
-func _end_load_im(res: Resource) -> void:
+func _end_load_immediate(res: Resource) -> void:
 	thread.wait_to_finish()
 	
 	if res is PackedScene:
@@ -55,9 +59,11 @@ func _end_load_im(res: Resource) -> void:
 		get_tree().current_scene = ins
 	
 	emit_signal("done")
+	
+	print("Scene is instanced to the scene tree")
 
 
-func _html5_load_im(path: String) -> void:
+func _html5_load_immediate(path: String) -> void:
 	var res: Resource = load(path)
 	
 	if res is PackedScene:
@@ -66,3 +72,5 @@ func _html5_load_im(path: String) -> void:
 		get_tree().current_scene = ins
 	
 	emit_signal("done")
+	
+	print("Scene is instanced to the scene tree (HTML5)")

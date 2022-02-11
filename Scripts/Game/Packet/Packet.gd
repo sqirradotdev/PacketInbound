@@ -67,7 +67,7 @@ func _randomize() -> void:
 	var s: float = rng_size.randi_range(84, 160)
 	sprite.rect_size = Vector2(s, s)
 	sprite.rect_position = Vector2(-s/2, -s/2)
-	shape.shape.extents = Vector2((s/2 + 16), (s/2 + 16))
+	shape.shape.extents = Vector2((s/2 + 8), (s/2 + 8))
 	particle.emission_rect_extents = Vector2(s/2, s/2)
 	
 	var s_p: float = 1 + (s - 84) / (160 - 84)

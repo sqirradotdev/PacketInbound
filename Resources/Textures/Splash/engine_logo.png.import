@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dizzyari_ref.png-e35643a88a195d5726f55c2b02934413.stex"
+path="res://.import/engine_logo.png-fe58a6f3d70f757c8aad3aaf151fcea0.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Textures/Splash/dizzyari_ref.png"
-dest_files=[ "res://.import/dizzyari_ref.png-e35643a88a195d5726f55c2b02934413.stex" ]
+source_file="res://Resources/Textures/Splash/engine_logo.png"
+dest_files=[ "res://.import/engine_logo.png-fe58a6f3d70f757c8aad3aaf151fcea0.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

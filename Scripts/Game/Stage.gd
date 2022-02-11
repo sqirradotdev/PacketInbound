@@ -55,12 +55,13 @@ func _ready() -> void:
 	
 	glitch_start.play()
 	glitch_filter.show()
-	tween.interpolate_method(self, "_set_glitch_amount", 0.7, 0, 0.25)
-	tween.interpolate_property(glitch_filter, "visible", true, false, 0, Tween.TRANS_LINEAR, Tween.EASE_OUT, 0.25)
+	
+	tween.interpolate_method(self, "_set_glitch_amount", 0.5, 0, 0.4)
 	tween.start()
 	
-	yield(get_tree().create_timer(0.25), "timeout")
+	yield(glitch_start, "finished")
 	
+	glitch_filter.hide()
 	music.play()
 	
 	if not Global.played_once:
@@ -107,6 +108,11 @@ func _process(delta: float) -> void:
 	elif tutorial:
 		if Input.is_action_just_pressed("ui_touch") and can_skip_tutorial:
 			call_deferred("_skip_tutorial")
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action("suicide"):
+		gauge = -1
 
 
 func format_second(second: int) -> String:

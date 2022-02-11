@@ -42,6 +42,18 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.701961, 0.701961, 0.701961, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Glow2:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 0.7, 0.7, 0.7, 1 ) ]
 }
 
@@ -78,7 +90,7 @@ __meta__ = {
 
 [node name="Glow" type="NinePatchRect" parent="Sprite"]
 modulate = Color( 0, 1, 0, 1 )
-self_modulate = Color( 0.802858, 0.802858, 0.802858, 1 )
+self_modulate = Color( 0.846168, 0.846168, 0.846168, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 84, 84 )
@@ -105,10 +117,10 @@ margin_right = 13.0
 margin_bottom = 13.0
 rect_min_size = Vector2( 110, 110 )
 texture = ExtResource( 4 )
-patch_margin_left = 21
-patch_margin_top = 18
-patch_margin_right = 21
-patch_margin_bottom = 18
+patch_margin_left = 29
+patch_margin_top = 34
+patch_margin_right = 38
+patch_margin_bottom = 29
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 __meta__ = {
@@ -151,12 +163,13 @@ __meta__ = {
 
 [node name="Glow2" type="Sprite" parent="."]
 modulate = Color( 0, 0.2, 0, 1 )
+self_modulate = Color( 0.845156, 0.845156, 0.845156, 1 )
 material = SubResource( 4 )
-position = Vector2( 1, -1 )
 scale = Vector2( 1.125, 1.125 )
 texture = ExtResource( 6 )
 
 [node name="Shape" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource( 5 )
 
 [node name="ExplosionParticle" type="CPUParticles2D" parent="."]

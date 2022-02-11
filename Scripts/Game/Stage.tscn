@@ -46,14 +46,22 @@ use_filter = true
 font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=9]
+size = 25
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 25
+font_data = ExtResource( 14 )
+
+[sub_resource type="DynamicFont" id=11]
 size = 64
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=12]
 size = 192
 font_data = ExtResource( 4 )
 
-[sub_resource type="Shader" id=11]
+[sub_resource type="Shader" id=13]
 code = "shader_type canvas_item;
 render_mode unshaded;
 
@@ -109,18 +117,10 @@ void fragment()
 }
 "
 
-[sub_resource type="ShaderMaterial" id=12]
-shader = SubResource( 11 )
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 13 )
 shader_param/amount = 0.2
 shader_param/speed = 0.6
-
-[sub_resource type="DynamicFont" id=14]
-size = 25
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=13]
-size = 25
-font_data = ExtResource( 14 )
 
 [node name="Stage" type="Control"]
 pause_mode = 2
@@ -329,7 +329,6 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-visible = false
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
@@ -340,6 +339,57 @@ text = "Gauge:
 Time:
 Chance:
 Speed:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tutorial" type="ColorRect" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -360.0
+margin_top = -326.0
+margin_right = 360.0
+margin_bottom = 2603.0
+color = Color( 0, 0, 0, 0.313726 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Tutorial"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 155.0
+margin_top = 140.0
+margin_right = -155.0
+custom_fonts/bold_font = SubResource( 9 )
+custom_fonts/normal_font = SubResource( 10 )
+bbcode_enabled = true
+bbcode_text = "[center]How to Play:
+
+This is an [b]internet stream of packets.[/b] Incoming packets will come from below and to the top.
+
+Your job is to eliminate [b][color=red]RED PACKETS[/color][/b] by dragging them to the side.
+
+A [b]CONNECTION HEALTH[/b] gauge monitors the connection health. It decreases gradually. Maintain your health by letting [b][color=lime]GREEN PACKETS[/color][/b] pass. Once it hits 0, it's game over.
+
+{ca}
+[/center]"
+text = "How to Play:
+
+This is an internet stream of packets. Incoming packets will come from below and to the top.
+
+Your job is to eliminate RED PACKETS by dragging them to the side.
+
+A CONNECTION HEALTH gauge monitors the connection health. It decreases gradually. Maintain your health by letting GREEN PACKETS pass. Once it hits 0, it's game over.
+
+{ca}
+"
+fit_content_height = true
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -372,7 +422,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -25.5
 margin_bottom = 25.5
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 text = "--CONNECTION DOWN--"
 align = 1
 __meta__ = {
@@ -385,22 +435,37 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -104.0
 margin_bottom = -53.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 text = "TOTAL UPTIME:"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label3" type="Label" parent="GameOverScreen"]
+[node name="RetryBtn" type="Label" parent="GameOverScreen"]
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_top = 91.0
-margin_bottom = 240.0
+margin_top = 127.0
+margin_bottom = 204.0
 mouse_filter = 0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 text = "Retry"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainMenuBtn" type="Label" parent="GameOverScreen"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 204.0
+margin_bottom = 281.0
+mouse_filter = 0
+custom_fonts/font = SubResource( 11 )
+text = "Main Menu"
 align = 1
 valign = 1
 __meta__ = {
@@ -413,7 +478,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 margin_top = -76.0
 margin_bottom = 76.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 12 )
 text = "00:00"
 align = 1
 __meta__ = {
@@ -421,8 +486,7 @@ __meta__ = {
 }
 
 [node name="GlitchFilter" type="ColorRect" parent="."]
-visible = false
-material = SubResource( 12 )
+material = SubResource( 14 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -838.0
@@ -432,54 +496,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Tutorial" type="ColorRect" parent="."]
-visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -360.0
-margin_top = -326.0
-margin_right = 360.0
-margin_bottom = 2603.0
-color = Color( 0, 0, 0, 0.313726 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Tutorial"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 155.0
-margin_top = 140.0
-margin_right = -155.0
-custom_fonts/bold_font = SubResource( 14 )
-custom_fonts/normal_font = SubResource( 13 )
-bbcode_enabled = true
-bbcode_text = "[center]How to Play:
-
-This is an [b]internet stream of packets.[/b] Incoming packets will come from below and to the top.
-
-Your job is to eliminate [b][color=red]RED PACKETS[/color][/b] by dragging them to the side.
-
-A [b]CONNECTION HEALTH[/b] gauge monitors the connection health. It decreases gradually. Maintain your health by letting [b][color=lime]GREEN PACKETS[/color][/b] pass. Once it hits 0, it's game over.
-
-{ca}
-[/center]"
-text = "How to Play:
-
-This is an internet stream of packets. Incoming packets will come from below and to the top.
-
-Your job is to eliminate RED PACKETS by dragging them to the side.
-
-A CONNECTION HEALTH gauge monitors the connection health. It decreases gradually. Maintain your health by letting GREEN PACKETS pass. Once it hits 0, it's game over.
-
-{ca}
-"
-fit_content_height = true
-scroll_active = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-[connection signal="gui_input" from="GameOverScreen/Label3" to="GameOverScreen" method="_on_Label3_gui_input"]
+[connection signal="gui_input" from="GameOverScreen/RetryBtn" to="GameOverScreen" method="_on_RetryBtn_gui_input"]
+[connection signal="gui_input" from="GameOverScreen/MainMenuBtn" to="GameOverScreen" method="_on_MainMenuBtn_gui_input"]

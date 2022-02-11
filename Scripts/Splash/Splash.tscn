@@ -1,116 +1,9 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Resources/Textures/Splash/arkav.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Splash/Splash.gd" type="Script" id=2]
-[ext_resource path="res://Resources/Textures/Splash/dizzyari_face.png" type="Texture" id=3]
-[ext_resource path="res://Resources/Textures/Splash/dizzyari_bg.png" type="Texture" id=4]
-[ext_resource path="res://Resources/Fonts/m5x7.ttf" type="DynamicFontData" id=5]
-
-[sub_resource type="Shader" id=1]
-code = "shader_type canvas_item;
-render_mode unshaded;
-
-void fragment() {
-	vec2 uv = UV;
-	uv.x += TIME * 0.3;
-	uv.y += TIME * 0.3;
-	
-	COLOR = texture(TEXTURE, uv);
-}"
-
-[sub_resource type="ShaderMaterial" id=2]
-shader = SubResource( 1 )
-
-[sub_resource type="Shader" id=3]
-code = "shader_type canvas_item;
-render_mode unshaded;
-
-uniform float size : hint_range(0, 1) = 0.5;
-
-void fragment() {
-	float mask = step(size - 0.04, length(UV - vec2(0.5, 0.5)));
-	float circle2 = step(size - 0.025, length(UV - vec2(0.5, 0.5)));
-	float circle3 = step(size, length(UV - vec2(0.5, 0.5)));
-	COLOR.rgb = vec3(circle2);
-	COLOR.rgb *= 1.0 - vec3(circle3);
-	COLOR.a = mask;
-}"
-
-[sub_resource type="ShaderMaterial" id=4]
-shader = SubResource( 3 )
-shader_param/size = 0.0
-
-[sub_resource type="DynamicFont" id=5]
-size = 48
-font_data = ExtResource( 5 )
-
-[sub_resource type="Animation" id=6]
-resource_name = "cool"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("Mask:material:shader_param/size")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1.1 ),
-"transitions": PoolRealArray( 0.183011, 1 ),
-"update": 0,
-"values": [ 0.0, 0.5 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Label:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.6, 1.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("Label:rect_position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0.6, 1.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 176 ), Vector2( 0, 193 ) ]
-}
-
-[sub_resource type="Animation" id=7]
-resource_name = "splash"
-length = 3.0
-tracks/0/type = "value"
-tracks/0/path = NodePath("ArkavLogo:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("BlackOverlay:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.3, 2.5, 3 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
+[ext_resource path="res://Resources/Textures/Splash/engine_logo.png" type="Texture" id=3]
+[ext_resource path="res://Resources/Textures/Splash/team_logo.png" type="Texture" id=4]
 
 [node name="Splash" type="Control"]
 anchor_right = 1.0
@@ -120,127 +13,19 @@ __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
 }
+dolly_amount = 1.0
 
-[node name="ColorBg" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="ReferenceRect" type="ReferenceRect" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -360.0
-margin_right = 360.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ArkavLogo" type="TextureRect" parent="."]
-modulate = Color( 1, 1, 1, 0 )
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -225.0
-margin_top = 80.0
-margin_right = 225.0
-margin_bottom = 414.0
-texture = ExtResource( 1 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="DizzyAri" type="Control" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -176.0
-margin_top = -420.0
-margin_right = 102.0
-margin_bottom = -173.0
-rect_scale = Vector2( 1.25, 1.25 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Background" type="TextureRect" parent="DizzyAri"]
-material = SubResource( 2 )
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -76.0
-margin_top = -90.0
-margin_right = 76.0
-margin_bottom = 62.0
+[node name="TeamLogo" type="Sprite" parent="."]
+position = Vector2( 360, 367 )
+scale = Vector2( 0.851211, 0.851211 )
 texture = ExtResource( 4 )
-stretch_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Face" type="TextureRect" parent="DizzyAri"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -62.0
-margin_top = -73.0
-margin_right = 58.0
-margin_bottom = 46.0
+[node name="Arkav" type="Sprite" parent="."]
+position = Vector2( 360, 874 )
+scale = Vector2( 0.773333, 0.773333 )
+texture = ExtResource( 1 )
+
+[node name="EngineLogo" type="Sprite" parent="."]
+position = Vector2( 360, 1162 )
+scale = Vector2( 0.786885, 0.786885 )
 texture = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Mask" type="ColorRect" parent="DizzyAri"]
-material = SubResource( 4 )
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -76.0
-margin_top = -90.0
-margin_right = 76.0
-margin_bottom = 62.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="DizzyAri"]
-modulate = Color( 1, 1, 1, 0 )
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-margin_top = 69.5
-margin_right = 6.10352e-05
-margin_bottom = 107.5
-custom_fonts/font = SubResource( 5 )
-text = "DizzyAri"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Animation" type="AnimationPlayer" parent="DizzyAri"]
-anims/cool = SubResource( 6 )
-
-[node name="BlackOverlay" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="AnimationRoot" type="AnimationPlayer" parent="."]
-anims/splash = SubResource( 7 )
-[connection signal="animation_finished" from="AnimationRoot" to="." method="_on_AnimationRoot_animation_finished"]

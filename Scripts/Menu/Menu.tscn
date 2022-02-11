@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Resources/Audio/Music/menu.ogg" type="AudioStream" id=1]
 [ext_resource path="res://Resources/Textures/Menu/Logo_top.png" type="Texture" id=2]
@@ -8,16 +8,9 @@
 [ext_resource path="res://Scripts/Menu/Menu.gd" type="Script" id=6]
 [ext_resource path="res://Resources/Audio/SFX/start_game.wav" type="AudioStream" id=7]
 
-[sub_resource type="DynamicFont" id=5]
-size = 64
+[sub_resource type="DynamicFont" id=1]
+size = 160
 font_data = ExtResource( 5 )
-
-[sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 4 )
-shader_param/time_offset = 0.0
-shader_param/speed = 3.0
-shader_param/x_intensity = 3.0
-shader_param/y_intensity = 1.0
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 4 )
@@ -26,9 +19,22 @@ shader_param/speed = 1.0
 shader_param/x_intensity = 2.0
 shader_param/y_intensity = 3.0
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 4 )
+shader_param/time_offset = 0.0
+shader_param/speed = 3.0
+shader_param/x_intensity = 3.0
+shader_param/y_intensity = 1.0
+
+[sub_resource type="DynamicFont" id=7]
+size = 64
+font_data = ExtResource( 5 )
+
+[sub_resource type="StyleBoxFlat" id=4]
 content_margin_left = 20.0
 content_margin_right = 20.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 5
 border_width_top = 5
@@ -36,7 +42,7 @@ border_width_right = 5
 border_width_bottom = 5
 border_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=5]
 content_margin_left = 20.0
 content_margin_right = 20.0
 bg_color = Color( 1, 1, 1, 1 )
@@ -44,18 +50,14 @@ border_width_left = 5
 border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
-border_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0, 0, 0, 0 )
 
-[sub_resource type="StyleBoxEmpty" id=10]
+[sub_resource type="StyleBoxEmpty" id=6]
 
-[sub_resource type="DynamicFont" id=6]
-size = 64
-font_data = ExtResource( 5 )
-
-[sub_resource type="CanvasItemMaterial" id=11]
+[sub_resource type="CanvasItemMaterial" id=8]
 blend_mode = 1
 
-[sub_resource type="Shader" id=3]
+[sub_resource type="Shader" id=9]
 code = "shader_type canvas_item;
 render_mode unshaded;
 
@@ -93,11 +95,15 @@ void fragment()
 }
 "
 
-[sub_resource type="ShaderMaterial" id=4]
-shader = SubResource( 3 )
-shader_param/sampleCount = 10
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
+shader_param/sampleCount = 8
 shader_param/blur = 0.0
-shader_param/falloff = 3.0
+shader_param/falloff = 0.0
+
+[sub_resource type="DynamicFont" id=11]
+size = 64
+font_data = ExtResource( 5 )
 
 [sub_resource type="DynamicFont" id=12]
 size = 64
@@ -133,17 +139,21 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Clickanywhere" type="Label" parent="."]
-anchor_left = 0.5
+[node name="PlayBtn" type="Label" parent="."]
+anchor_left = 0.494444
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 0.494444
 anchor_bottom = 0.5
 margin_left = -360.0
-margin_top = 85.0
+margin_top = 80.0
 margin_right = 360.0
-margin_bottom = 136.0
-custom_fonts/font = SubResource( 5 )
-text = "Click anywhere to play!"
+margin_bottom = 207.0
+mouse_filter = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 10
+custom_constants/shadow_offset_y = 10
+custom_fonts/font = SubResource( 1 )
+text = "PLAY!"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -162,19 +172,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Top" type="TextureRect" parent="Logo"]
-material = SubResource( 1 )
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -90.0
-margin_top = -23.0
-margin_right = 90.0
-margin_bottom = 23.0
-mouse_filter = 2
-texture = ExtResource( 2 )
-
 [node name="Bottom" type="TextureRect" parent="Logo"]
 material = SubResource( 2 )
 anchor_left = 0.5
@@ -191,25 +188,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Version" type="Label" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -80.0
-margin_top = -51.0
-custom_fonts/font = SubResource( 5 )
-text = "v1.0"
+[node name="Top" type="TextureRect" parent="Logo"]
+material = SubResource( 3 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -90.0
+margin_top = -23.0
+margin_right = 90.0
+margin_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource( 2 )
+
+[node name="SettingsBtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -106.0
+margin_top = 319.0
+margin_right = 106.0
+margin_bottom = 390.0
+custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 7 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/disabled = SubResource( 4 )
+custom_styles/normal = SubResource( 4 )
+shortcut_in_tooltip = false
+text = "Settings"
 __meta__ = {
 "_edit_use_anchors_": false
-}
-
-[node name="ClickRegion" type="Control" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 1
-__meta__ = {
-"_edit_lock_": true
 }
 
 [node name="CreditsBtn" type="Button" parent="."]
@@ -217,20 +231,20 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -292.0
-margin_top = 518.0
-margin_right = -104.0
-margin_bottom = 579.0
-custom_styles/hover = SubResource( 7 )
-custom_styles/pressed = SubResource( 9 )
-custom_styles/focus = SubResource( 10 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 6 )
+margin_left = -94.0
+margin_top = 412.0
+margin_right = 94.0
+margin_bottom = 483.0
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 7 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/disabled = SubResource( 4 )
+custom_styles/normal = SubResource( 4 )
 shortcut_in_tooltip = false
 text = "Credits"
 __meta__ = {
@@ -239,7 +253,7 @@ __meta__ = {
 
 [node name="WhiteOverlay" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 11 )
+material = SubResource( 8 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -248,10 +262,22 @@ __meta__ = {
 
 [node name="RadialBlurFilter" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 4 )
+material = SubResource( 10 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Version" type="Label" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -51.0
+custom_fonts/font = SubResource( 11 )
+text = "v1.1.0"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -280,15 +306,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -294.5
-margin_top = -349.5
-margin_right = 294.5
-margin_bottom = 349.5
+margin_left = -294.0
+margin_top = -358.0
+margin_right = 295.0
+margin_bottom = 125.0
 custom_fonts/font = SubResource( 12 )
-text = "DizzyAri is:
-I Gede Hari Kresna Wiyasa (gedehari)
-
-Art, music, and game design by gedehari
+text = "Art, music, and game design by sqirra-rng.
 
 Fonts used:
 - m5x7
@@ -297,31 +320,35 @@ Fonts used:
 Made for Arkav Game Jam 2021"
 align = 1
 autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="BackBtn" type="Button" parent="Credits"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -292.0
-margin_top = 518.0
-margin_right = -104.0
-margin_bottom = 579.0
-custom_styles/hover = SubResource( 7 )
-custom_styles/pressed = SubResource( 9 )
-custom_styles/focus = SubResource( 10 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 7 )
-custom_fonts/font = SubResource( 6 )
+margin_left = -94.0
+margin_top = 412.0
+margin_right = 94.0
+margin_bottom = 483.0
 custom_colors/font_color_disabled = Color( 1, 1, 1, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 7 )
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/focus = SubResource( 6 )
+custom_styles/disabled = SubResource( 4 )
+custom_styles/normal = SubResource( 4 )
 shortcut_in_tooltip = false
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="gui_input" from="ClickRegion" to="." method="_on_ClickRegion_gui_input"]
+
+[connection signal="gui_input" from="PlayBtn" to="." method="_on_PlayBtn_gui_input"]
 [connection signal="pressed" from="CreditsBtn" to="." method="_on_CreditsBtn_pressed"]
 [connection signal="pressed" from="Credits/BackBtn" to="." method="_on_BackBtn_pressed"]
