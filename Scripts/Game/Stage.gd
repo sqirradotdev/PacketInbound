@@ -19,6 +19,7 @@ onready var passed_sound_good = $PassedSoundGood
 onready var passed_sound_bad = $PassedSoundBad
 onready var tutorial_screen = $Tutorial
 onready var tutorial_screen_rtl = $Tutorial/RichTextLabel
+onready var pause_screen = $PauseScreen
 onready var tween = $Tween
 onready var tween2 = $Tween2
 
@@ -45,14 +46,21 @@ var stream_width_start_end: Vector2
 
 
 func _ready() -> void:
+	if OS.is_debug_build():
+		$Label.show()
+	else:
+		$Label.hide()
+	
 	stream_width_start_end = Vector2(stream_area.rect_position.x, stream_area.rect_position.x + stream_area.rect_size.x)
 	game_over_screen.hide()
 	tutorial_screen.hide()
+	pause_screen.hide()
 	
 	var p_dup = passed_particle.duplicate()
 	passed_particle.queue_free()
 	passed_particle = p_dup
 	
+	glitch_filter.show()
 	glitch_start.play()
 	glitch_filter.show()
 	
@@ -75,6 +83,19 @@ func _process(delta: float) -> void:
 	speed_multiplied = speed * speed_multiplier
 	
 	if active:
+		## Input
+		
+		if Input.is_action_just_pressed("suicide"):
+			gauge = -1
+		
+		if Input.is_action_just_pressed("debug"):
+			$Label.visible = not $Label.visible
+		
+		if Input.is_action_pressed("pause"):
+			_pause()
+		
+		## Gameplay
+		
 		if not speed > 430:
 			speed += 3.0 * delta
 		else:
@@ -108,11 +129,6 @@ func _process(delta: float) -> void:
 	elif tutorial:
 		if Input.is_action_just_pressed("ui_touch") and can_skip_tutorial:
 			call_deferred("_skip_tutorial")
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action("suicide"):
-		gauge = -1
 
 
 func format_second(second: int) -> String:
@@ -177,12 +193,12 @@ func _game_over() -> void:
 	color_flash.color.v = 0.001
 	tween.interpolate_property(color_flash, "color:v", 0.4, 0, 1)
 	tween.interpolate_property(self, "speed_multiplier", 1, 0, 1)
+	tween.interpolate_method(self, "_set_glitch_amount", 1.0, 0.5, 0.4)
 	tween2.interpolate_property(music, "pitch_scale", 1, 0.3, 3.5)
 	tween.start()
 	tween2.start()
 	
 	glitch_filter.show()
-	_set_glitch_amount(1)
 	
 	yield(get_tree().create_timer(1), "timeout")
 	
@@ -228,5 +244,16 @@ func _on_packet_passed(point: int) -> void:
 			passed_sound_good.play()
 
 
+func _on_PauseButton_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_touch"):
+		_pause()
+
+
 func _set_glitch_amount(amount: float) -> void:
 	glitch_filter.material.set_shader_param("amount", amount)
+
+
+func _pause():
+	if active:
+		get_tree().paused = true
+		pause_screen.show()
